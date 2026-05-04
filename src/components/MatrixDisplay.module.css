@@ -1,0 +1,41 @@
+.card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 14px 18px;
+  margin-bottom: 8px;
+}
+
+.title {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--text-muted);
+  margin-bottom: 12px;
+  letter-spacing: 0.04em;
+}
+
+.table {
+  border-collapse: separate;
+  border-spacing: 0;
+  width: 100%;
+}
+
+.table td {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  text-align: center;
+  padding: 5px 10px;
+  line-height: 1.4;
+}
+
+.cellZero {
+  color: var(--text-muted);
+}
+
+.cellPos {
+  color: var(--positive);
+}
+
+.cellNeg {
+  color: var(--negative);
+}
