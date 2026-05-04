@@ -1,44 +1,27 @@
 # Linear Transformations Visualizer
 
-Interactive visualizer for 2D and 3D linear transformations. Built with React + Vite + Three.js + Express.
+An interactive tool for exploring how 2D and 3D linear transformations work — built for students, developers, and anyone learning linear algebra or computer graphics.
 
-## Deploy to Render
+## What it does
 
-### Option 1 — render.yaml (auto)
-1. Push to GitHub
-2. Go to [dashboard.render.com](https://dashboard.render.com) → **New > Web Service**
-3. Connect your repo — Render detects `render.yaml` automatically
-4. Click **Deploy**
+You manipulate sliders and watch a shape transform in real time on a coordinate grid. Every change instantly updates the transformation matrix and formula, so you can see the math behind the movement.
 
-### Option 2 — Manual settings
-| Setting | Value |
-|---|---|
-| Runtime | Node |
-| Build command | `npm install && npm run build` |
-| Start command | `npm start` |
-| Environment | `NODE_ENV=production` |
+## The 5 transformation modes
 
-## Local development
+**Translation** — Move a shape along the X and Y axes. See how the homogeneous 3×3 matrix encodes displacement, and why translation cannot be represented as a simple 2×2 matrix multiplication without homogeneous coordinates.
 
-```bash
-npm install
-npm run dev        # React dev server (Vite)
-npm run build && npm start  # Full production mode
-```
+**Rotation** — Rotate a shape around any pivot point you choose. Drag the angle slider from −180° to 180° and watch the 2×2 rotation matrix update with live cos(θ) and sin(θ) values.
 
-## Project structure
+**Scaling** — Stretch or shrink a shape from a configurable center point. Use negative scale values to reflect across an axis. The 2×2 scaling matrix updates in real time.
 
-```
-├── server.js             # Express server (static + /api/explain)
-├── render.yaml           # Render deploy config
-├── api/
-│   └── explain.js        # (kept for reference — not used in Render mode)
-├── src/
-│   ├── components/       # Canvas2D, Canvas3D, Slider, MatrixDisplay
-│   ├── tabs/             # Translation, Rotation, Scaling, Combined, 3D
-│   ├── utils/math.js     # Pure transformation math
-│   ├── App.jsx
-│   └── main.jsx
-├── index.html
-└── vite.config.js
-```
+**Combined** — Chain rotation → scaling → translation into one operation. This tab demonstrates why order matters: T·S·R ≠ R·S·T. The resulting 3×3 homogeneous matrix is the product of all three.
+
+**3D Transformations** — Apply rotation (X, Y, Z axes), scale, and translation to a 3D cube rendered with Three.js. The full 4×4 column-major matrix updates live as you move the sliders.
+
+## Stack
+
+- React 18 + Vite
+- Three.js for 3D rendering
+- HTML5 Canvas API for 2D rendering
+- Express.js server (serves both the app and the `/api/explain` endpoint)
+- Deployed on Render
