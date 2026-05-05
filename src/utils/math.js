@@ -75,10 +75,10 @@ export function getShape(type, cx = 0, cy = 0) {
     }
     case 'diamond':
       return [
-        [cx,       cy + 3],
-        [cx + 2,   cy],
-        [cx,       cy - 3],
-        [cx - 2,   cy],
+        [cx,     cy + 3],
+        [cx + 2, cy],
+        [cx,     cy - 3],
+        [cx - 2, cy],
       ]
     default:
       return getShape('triangle', cx, cy)
@@ -162,5 +162,42 @@ export function build4x4Matrix(rotX, rotY, rotZ, sx, sy, sz, tx, ty, tz) {
     [round(sx * cy * sz2), round(sy * (cx * cz + sx2 * sy2 * sz2)), round(sz * (-cz * sx2 + cx * sy2 * sz2)), round(ty)],
     [round(sx * -sy2),     round(sy * cy * sx2),                    round(sz * cx * cy),                      round(tz)],
     [0, 0, 0, 1]
+  ]
+}
+
+export function applyReflection(points, axis, theta = 0) {
+  return points.map(([x, y]) => {
+    if (axis === 'x')      return [round(x), round(-y)]
+    if (axis === 'y')      return [round(-x), round(y)]
+    if (axis === 'origin') return [round(-x), round(-y)]
+    const r = toRad(theta)
+    const c2 = Math.cos(2 * r)
+    const s2 = Math.sin(2 * r)
+    return [round(c2 * x + s2 * y), round(s2 * x - c2 * y)]
+  })
+}
+
+export function reflectionMatrix(axis, theta = 0) {
+  if (axis === 'x')      return [[1, 0], [0, -1]]
+  if (axis === 'y')      return [[-1, 0], [0, 1]]
+  if (axis === 'origin') return [[-1, 0], [0, -1]]
+  const r = toRad(theta)
+  return [
+    [round(Math.cos(2 * r)), round(Math.sin(2 * r))],
+    [round(Math.sin(2 * r)), round(-Math.cos(2 * r))]
+  ]
+}
+
+export function applyShear(points, kx, ky) {
+  return points.map(([x, y]) => [
+    round(x + kx * y),
+    round(ky * x + y)
+  ])
+}
+
+export function shearMatrix(kx, ky) {
+  return [
+    [1, round(kx)],
+    [round(ky), 1]
   ]
 }
