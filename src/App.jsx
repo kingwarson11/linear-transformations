@@ -1,21 +1,32 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, lazy, Suspense } from 'react'
 import Translation from './tabs/Translation'
 import Rotation from './tabs/Rotation'
 import Scaling from './tabs/Scaling'
 import Combined from './tabs/Combined'
-import Transformations3D from './tabs/Transformations3D'
+import Reflection from './tabs/Reflection'
+import Shear from './tabs/Shear'
+import { getUrlTab } from './hooks/useUrlState'
 import styles from './App.module.css'
 
+const Transformations3D = lazy(() => import('./tabs/Transformations3D'))
+
 const TABS = [
-  { id: 'translation', label: 'Translation',        short: 'T'  },
-  { id: 'rotation',    label: 'Rotation',           short: 'R'  },
-  { id: 'scaling',     label: 'Scaling',            short: 'S'  },
-  { id: 'combined',    label: 'Combined',           short: 'C'  },
-  { id: '3d',          label: '3D Transformations', short: '3D' },
+  { id: 'translation', label: 'Translation',        short: 'T'   },
+  { id: 'rotation',    label: 'Rotation',           short: 'R'   },
+  { id: 'scaling',     label: 'Scaling',            short: 'S'   },
+  { id: 'combined',    label: 'Combined',           short: 'C'   },
+  { id: 'reflection',  label: 'Reflection',         short: 'Ref' },
+  { id: 'shear',       label: 'Shear',              short: 'H'   },
+  { id: '3d',          label: '3D Transformations', short: '3D'  },
 ]
 
+const VALID = new Set(TABS.map(t => t.id))
+
 export default function App() {
-  const [active, setActive] = useState('translation')
+  const [active, setActive] = useState(() => {
+    const url = getUrlTab()
+    return url && VALID.has(url) ? url : 'translation'
+  })
   const [explanations, setExplanations] = useState({})
 
   useEffect(() => {
@@ -33,8 +44,15 @@ export default function App() {
       case 'rotation':    return <Rotation explanation={exp} />
       case 'scaling':     return <Scaling explanation={exp} />
       case 'combined':    return <Combined explanation={exp} />
-      case '3d':          return <Transformations3D explanation={exp} />
-      default:            return null
+      case 'reflection':  return <Reflection explanation={exp} />
+      case 'shear':       return <Shear explanation={exp} />
+      case '3d':
+        return (
+          <Suspense fallback={<div className={styles.loading}>Loading 3D engine…</div>}>
+            <Transformations3D explanation={exp} />
+          </Suspense>
+        )
+      default: return null
     }
   }
 
